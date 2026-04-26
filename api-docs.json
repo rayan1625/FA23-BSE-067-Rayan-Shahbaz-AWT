@@ -1,0 +1,114 @@
+{
+  "info": {
+    "name": "AdFlow Pro Backend API",
+    "description": "Endpoints for Ad Lifecycle, Payments, Moderation, and Automation Cron Jobs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Client Workflows",
+      "item": [
+        {
+          "name": "Submit Ad for Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/ads/:id/submit", "host": ["{{base_url}}"], "path": ["api", "ads", ":id", "submit"] }
+          }
+        },
+        {
+          "name": "Submit Payment Proof",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ad_id\": \"uuid-here\",\n  \"amount\": 49.99,\n  \"method\": \"Credit Card\",\n  \"transaction_ref\": \"TXN-123\",\n  \"proof_url\": \"https://link.com/receipt.pdf\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/client/payments", "host": ["{{base_url}}"], "path": ["api", "client", "payments"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Moderator & Admin Workflows",
+      "item": [
+        {
+          "name": "Review Ad",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"approve\",\n  \"notes\": \"Looks good\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/moderator/ads/:id/review", "host": ["{{base_url}}"], "path": ["api", "moderator", "ads", ":id", "review"] }
+          }
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"verify\",\n  \"notes\": \"Payment confirmed in bank\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/payments/:id/verify", "host": ["{{base_url}}"], "path": ["api", "admin", "payments", ":id", "verify"] }
+          }
+        },
+        {
+          "name": "Schedule / Publish Ad",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_jwt_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"schedule_action\": \"publish_now\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/admin/ads/:id/schedule", "host": ["{{base_url}}"], "path": ["api", "admin", "ads", ":id", "schedule"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cron Jobs (Automation)",
+      "item": [
+        {
+          "name": "Publish Scheduled Ads",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{cron_secret}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/cron/publish-scheduled", "host": ["{{base_url}}"], "path": ["api", "cron", "publish-scheduled"] }
+          }
+        },
+        {
+          "name": "Expire Old Ads",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{cron_secret}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/cron/expire-ads", "host": ["{{base_url}}"], "path": ["api", "cron", "expire-ads"] }
+          }
+        }
+      ]
+    }
+  ]
+}
